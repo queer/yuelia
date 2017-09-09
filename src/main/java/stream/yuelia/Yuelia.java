@@ -1,10 +1,7 @@
 package stream.yuelia;
 
 import lombok.Getter;
-import net.dv8tion.jda.core.AccountType;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.*;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.Event;
@@ -45,17 +42,20 @@ public final class Yuelia {
                             } else if(event instanceof GuildMessageReceivedEvent) {
                                 final Message message = ((GuildMessageReceivedEvent) event).getMessage();
                                 if(message.getGuild().getId().equalsIgnoreCase("267500017260953601")) {
-                                    if(message.getContent().trim().equalsIgnoreCase("!help")) {
+                                    if(message.getContent().trim().equalsIgnoreCase("!what")) {
                                         final EmbedBuilder builder = new EmbedBuilder();
                                         builder.setTitle("yuelia | amybot for twitch", "https://yuelia.stream")
                                                 .addField("What?", "yuelia is amybot for Twitch.TV. There is no guarantee of when she'll be ready.", false);
                                         message.getChannel().sendMessage(builder.build()).queue();
+                                    } else if(message.getContent().trim().equalsIgnoreCase("!help")) {
+                                        message.getChannel().sendMessage("If you're trying to use <@251930037673132032>, type `amy!help`.").queue();
                                     }
                                 }
                             }
                         }
                     })
-                    .setGame(Game.of("!help | amybot for twitch"))
+                    .setStatus(OnlineStatus.DO_NOT_DISTURB)
+                    .setGame(Game.of("!what | amybot for twitch"))
                     .buildAsync();
         } catch(final LoginException | RateLimitedException e) {
             throw new RuntimeException(e);
