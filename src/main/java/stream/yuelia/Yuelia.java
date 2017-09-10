@@ -34,22 +34,19 @@ public final class Yuelia {
     private void start() {
         try {
             jda = new JDABuilder(AccountType.BOT).setToken(System.getenv("YUELIA_DISCORD_TOKEN"))
-                    .addEventListener(new EventListener() {
-                        @Override
-                        public void onEvent(final Event event) {
-                            if(event instanceof ReadyEvent) {
-                                getLogger().info("yuelia started up and ready to go");
-                            } else if(event instanceof GuildMessageReceivedEvent) {
-                                final Message message = ((GuildMessageReceivedEvent) event).getMessage();
-                                if(message.getGuild().getId().equalsIgnoreCase("267500017260953601")) {
-                                    if(message.getContent().trim().equalsIgnoreCase("!what")) {
-                                        final EmbedBuilder builder = new EmbedBuilder();
-                                        builder.setTitle("yuelia | amybot for twitch", "https://yuelia.stream")
-                                                .addField("What?", "yuelia is amybot for Twitch.TV. There is no guarantee of when she'll be ready.", false);
-                                        message.getChannel().sendMessage(builder.build()).queue();
-                                    } else if(message.getContent().trim().equalsIgnoreCase("!help")) {
-                                        message.getChannel().sendMessage("If you're trying to use <@251930037673132032>, type `amy!help`.").queue();
-                                    }
+                    .addEventListener((EventListener) event -> {
+                        if(event instanceof ReadyEvent) {
+                            getLogger().info("yuelia started up and ready to go");
+                        } else if(event instanceof GuildMessageReceivedEvent) {
+                            final Message message = ((GuildMessageReceivedEvent) event).getMessage();
+                            if(message.getGuild().getId().equalsIgnoreCase("267500017260953601")) {
+                                if(message.getContent().trim().equalsIgnoreCase("!what")) {
+                                    final EmbedBuilder builder = new EmbedBuilder();
+                                    builder.setTitle("yuelia | amybot for twitch", "https://yuelia.stream")
+                                            .addField("What?", "yuelia is amybot for Twitch.TV. There is no guarantee of when she'll be ready.", false);
+                                    message.getChannel().sendMessage(builder.build()).queue();
+                                } else if(message.getContent().trim().equalsIgnoreCase("!help")) {
+                                    message.getChannel().sendMessage("If you're trying to use <@251930037673132032>, type `amy!help`.").queue();
                                 }
                             }
                         }
@@ -58,7 +55,7 @@ public final class Yuelia {
                     .setGame(Game.of("!what | amybot for twitch"))
                     .buildAsync();
         } catch(final LoginException | RateLimitedException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
     }
 }
